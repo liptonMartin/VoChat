@@ -15,6 +15,7 @@ public class AuthController {
     public Response register() {
         var eventId = UUID.ofEpochMillis(System.currentTimeMillis());
 
+
         return new Response(eventId);
     }
 }
