@@ -1,7 +1,8 @@
 package com.lipton.auth.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.hibernate.exception.ConstraintViolationException;
+import lombok.Getter;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -13,11 +14,12 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Size(max = 255, message = "Username must not exceed 255 characters")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 255)
     private String username;
 
     @Column(nullable = false)
+    @Getter
+    @JsonIgnore
     private String password;
 
     public UserEntity(String username, String hashPassword) {

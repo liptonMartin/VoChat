@@ -27,7 +27,7 @@ public class AuthHandle {
         if (!Objects.equals(password, confirmPassword))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords are not equal");
 
-        if (username.length() > 256)
+        if (username.length() > 255)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username must not exceed 255 characters");
 
         var hashPassword = passwordEncoder.encode(password);
@@ -35,6 +35,17 @@ public class AuthHandle {
 
         if (inserted == 0)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
+
+        return new UserDto(username);
+    }
+
+    public UserDto handleLogin(String username, String password) {
+        var user = userRepository.findByUsername(username);
+
+        var hashPassword = user.map(UserEntity::getPassword).orElse("some_user_password");
+
+        if (!passwordEncoder.matches(password, hashPassword))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
 
         return new UserDto(username);
     }
